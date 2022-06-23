@@ -34,10 +34,11 @@ export class EthersSafeProxy {
     const operation = 0;
 
     const eoaNonce = await this.signer.getTransactionCount('pending');
-    const lastBlock = await this.provider.getBlock('pending');
-    const baseGas = await this.estimateGas(transaction);
-    const fee = lastBlock.baseFeePerGas;
-    const gas = baseGas.mul(fee);
+    const feeData = await this.provider.getFeeData();
+    console.log("feeData:", feeData);
+
+    const baseGas = BigNumber.from((21000 * 4).toString());
+    const gas = baseGas.mul(feeData.maxFeePerGas);
 
     const txHash = await this.getTransactionHash(
       transaction,
